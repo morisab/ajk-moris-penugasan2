@@ -1,0 +1,27 @@
+---
+# tasks file for backend-deploy
+
+- name: Copy be template
+  become: true
+  copy:
+    src: backend/templates/be-template.j2
+    dest: /etc/nginx/sites-available/backend
+
+- name: Link to site-enabled
+  file:
+    src: /etc/nginx/sites-available/backend
+    dest: /etc/nginx/sites-enabled/backend
+    state: link
+  become: true
+  notify: Restart nginx
+
+- name: Curl result
+  uri:
+    url: "http://localhost:9000"
+    method: GET
+    return_content: yes
+  register: result
+
+- name: Display response
+  debug:
+    var: result.content

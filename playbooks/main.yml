@@ -1,0 +1,17 @@
+---
+- name: Main Playbook
+  hosts: all
+  gather_facts: true
+
+  tasks:
+    - name: Include prepare playbook
+      include: prepare.yml
+
+    - name: Include build playbook
+      include: build.yml
+
+    - name: Include migrate playbook
+      include: migrate.yml
+
+    - name: Include deploy playbook
+      include: deploy.yml

@@ -1,0 +1,11 @@
+---
+- name: Prepare servers
+  hosts: all
+  become: true
+
+  vars_files:
+    - ../env/vars.yml
+
+  roles:
+    - ../roles/mysql-prepare
+    - ../roles/nginx-prepare

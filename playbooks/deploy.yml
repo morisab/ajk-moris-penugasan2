@@ -1,0 +1,8 @@
+---
+- name: Deploy Frontend & Backend
+  hosts: all
+  become: true
+
+  roles:
+    - backend-deploy
+    - frontend-deploy

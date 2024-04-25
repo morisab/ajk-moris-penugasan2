@@ -1,0 +1,8 @@
+---
+- name: Build Frontend & Backend
+  hosts: all
+  become: true
+
+  roles:
+    - backend-build
+    - frontend-build

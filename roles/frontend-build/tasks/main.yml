@@ -1,0 +1,92 @@
+---
+# tasks file for frontend-build
+
+- name: Install NVM
+  shell: |
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+    echo 'export NVM_DIR="$HOME/.nvm"' >> ~/.bashrc
+    echo '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm' >> ~/.bashrc
+    echo '[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion' >> ~/.bashrc
+  become: true
+
+- name: Install Yarn
+  shell: |
+    curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+    echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+    sudo apt-get update
+    sudo apt-get install yarn -y
+  become: true
+
+- name: Setup Node
+  shell: |
+    export NVM_DIR="$HOME/.nvm"
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+    [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+    nvm install 18
+    nvm alias default 18
+  become: true
+
+- name: Install npm
+  apt:
+    name: npm
+    state: present
+  become: true
+
+- name: Clone repository
+  git:
+    repo: https://github.com/elshiraphine/fe-todo.git
+    dest: /var/www/fe-todo
+    force: true
+  become: true
+
+- name: Change permission
+  file:
+    path: /var/www/fe-todo
+    mode: '0775'
+    recurse: true
+  become: true
+
+- name: Change permission 2
+  file:
+    path: /usr/local/bin
+    mode: '0777'
+    recurse: true
+  become: true
+
+- name: Change ownership
+  file:
+    path: /var/www/fe-todo
+    owner: www-data
+    group: www-data
+    recurse: true
+  become: true
+
+- name: Remove package-lock
+  shell: rm /var/www/fe-todo/package-lock.json
+  become: true
+  ignore_errors: true
+
+- name: Replace base URL in config.ts file
+  ansible.builtin.replace:
+    path: /var/www/fe-todo/src/app/config/config.ts
+    regexp: 'baseURL: .*'
+    replace: 'baseURL: "http://172.174.249.66:9000/api"'
+
+- name: Install dependencies and build
+  shell: |
+    export NVM_DIR="$HOME/.nvm"
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+    [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+    nvm use 18
+    cd /var/www/fe-todo
+    nvm use 18
+    yarn install --ignore-engines
+    nvm use 18
+    yarn build
+  become: true
+
+- name: Install PM2
+  npm:
+    name: pm2
+    global: true
+  become: true

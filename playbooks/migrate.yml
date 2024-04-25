@@ -1,0 +1,7 @@
+---
+- name: Migrate database
+  hosts: all
+  become: true
+
+  roles:
+    - backend-migrate

@@ -1,0 +1,34 @@
+---
+# tasks file for frontend-deploy
+
+- name: Start frontend with PM2
+  become: true
+  shell: |
+    source ~/.nvm/nvm.sh && cd /var/www/fe-todo && pm2 start --name fe-todo "yarn start"
+  args:
+    executable: /bin/bash
+
+- name: Copy be template
+  become: true
+  copy:
+    src: frontend-deploy/templates/fe-template.j2
+    dest: /etc/nginx/sites-available/frontend
+
+- name: Link to site-enabled
+  file:
+    src: /etc/nginx/sites-available/frontend
+    dest: /etc/nginx/sites-enabled/frontend
+    state: link
+  become: true
+  notify: Restart nginx
+
+- name: Curl result
+  uri:
+    url: "http://localhost:3000"
+    method: GET
+    return_content: yes
+  register: result
+
+- name: Display response
+  debug:
+    var: result.content
