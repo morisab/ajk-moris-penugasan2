@@ -13,15 +13,3 @@
     dest: /etc/nginx/sites-enabled/backend
     state: link
   become: true
-  notify: Restart nginx
-
-# - name: Curl result
-#   uri:
-#     url: "http://localhost:9000"
-#     method: GET
-#     return_content: yes
-#   register: result
-
-# - name: Display response
-#   debug:
-#     var: result.content

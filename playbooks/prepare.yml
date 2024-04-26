@@ -7,5 +7,5 @@
     - ../env/vars.yml
 
   roles:
-    - ../roles/mysql-prepare
-    - ../roles/nginx-prepare
+    - roles/mysql-prepare
+    - roles/nginx-prepare

@@ -3,3 +3,5 @@
 db_name: coba1
 db_user: user1
 db_password: supersecret
+backend_dir: /var/www/be-todo
+frontend_dir: /var/www/fe-todo

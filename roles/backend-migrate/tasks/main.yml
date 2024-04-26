@@ -3,16 +3,16 @@
 
 - name: Generate App Key
   shell: |
-      cd /var/www/be-todo
+      cd {{ backend_dir }}
       php artisan key:generate
   become: true
 
 - name: Generate App Key 2
   command:
     cmd: "php artisan migrate"
-    chdir: "/var/www/be-todo"
+    chdir: "{{ backend_dir }}"
 
 - name: Generate JWT Secret
   command:
     cmd: "php artisan jwt:secret"
-    chdir: "/var/www/be-todo"
+    chdir: "{{ backend_dir }}"

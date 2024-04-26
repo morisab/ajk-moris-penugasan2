@@ -3,6 +3,9 @@
   hosts: all
   become: true
 
+  vars_files:
+    - ../env/vars.yml
+
   roles:
-    - ../roles/backend-build
-    - ../roles/frontend-build
+    - roles/backend-build
+    - roles/frontend-build

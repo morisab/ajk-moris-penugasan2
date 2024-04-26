@@ -31,20 +31,20 @@
 - name: Add safe directory for Git
   community.general.git_config:
     name: safe.directory
-    value: /var/www/be-todo
+    value: "{{ backend_dir }}"
     add_mode: add
     scope: global
 
 - name: Clone Repo BE
   git:
     repo: https://github.com/elshiraphine/be-todo.git
-    dest: /var/www/be-todo
+    dest: "{{ backend_dir }}"
     version: master
     force: yes
 
 - name: Change permission
   file:
-    path: /var/www/be-todo
+    path: "{{ backend_dir }}"
     mode: '0775'
     recurse: yes
   become: true
@@ -58,7 +58,7 @@
 
 - name: Change ownership
   file:
-    path: /var/www/be-todo
+    path: "{{ backend_dir }}"
     owner: www-data
     group: www-data
     recurse: yes
@@ -82,7 +82,7 @@
 - name: Install Composer Dependencies as root
   community.general.composer:
     command: install
-    working_dir: /var/www/be-todo
+    working_dir: "{{ backend_dir }}"
     arguments: "--no-plugins --no-scripts"
   become: true
   become_user: root
@@ -92,7 +92,7 @@
 - name: Update Composer Dependencies as root
   community.general.composer:
     command: update
-    working_dir: /var/www/be-todo
+    working_dir: "{{ backend_dir }}"
     arguments: "--no-plugins --no-scripts"
   become: true
   become_user: root
@@ -103,21 +103,17 @@
   become: true
   copy:
     src: templates/env-template
-    dest: /var/www/be-todo/.env
+    dest: "{{ backend_dir }}/.env"
 
 - name: Configure Laravel database
   template:
     src: templates/env-template
-    dest: /var/www/be-todo/.env
-  vars:
-    db_name: 'coba1'
-    db_user: 'user1'
-    db_password: supersecret
+    dest: "{{ backend_dir }}/.env"
 
 - name: Run composer dump-autoload
   community.general.composer:
     command: dump-autoload
-    working_dir: /var/www/be-todo
+    working_dir: "{{ backend_dir }}"
   become: true
   become_user: root
   environment:

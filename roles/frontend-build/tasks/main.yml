@@ -1,6 +1,12 @@
 ---
 # tasks file for frontend-build
 
+- name: Install curl
+  apt:
+    name: curl
+    state: present
+  become: true
+
 - name: Install NVM
   shell: |
     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
@@ -35,13 +41,13 @@
 - name: Clone repository
   git:
     repo: https://github.com/elshiraphine/fe-todo.git
-    dest: /var/www/fe-todo
+    dest: "{{ frontend_dir}}"
     force: true
   become: true
 
 - name: Change permission
   file:
-    path: /var/www/fe-todo
+    path: "{{ frontend_dir}}"
     mode: '0775'
     recurse: true
   become: true
@@ -55,20 +61,20 @@
 
 - name: Change ownership
   file:
-    path: /var/www/fe-todo
+    path: "{{ frontend_dir}}"
     owner: www-data
     group: www-data
     recurse: true
   become: true
 
 - name: Remove package-lock
-  shell: rm /var/www/fe-todo/package-lock.json
+  shell: rm "{{ frontend_dir}}/package-lock.json"
   become: true
   ignore_errors: true
 
 - name: Replace base URL in config.ts file
   ansible.builtin.replace:
-    path: /var/www/fe-todo/src/app/config/config.ts
+    path: "{{ frontend_dir}}/src/app/config/config.ts"
     regexp: 'baseURL: .*'
     replace: 'baseURL: "http://172.174.249.66:9000/api"'
 
@@ -78,7 +84,7 @@
     [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
     [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
     nvm use 18
-    cd /var/www/fe-todo
+    cd "{{ frontend_dir}}"
     nvm use 18
     yarn install --ignore-engines
     nvm use 18

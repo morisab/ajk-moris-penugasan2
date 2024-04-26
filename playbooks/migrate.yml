@@ -3,5 +3,8 @@
   hosts: all
   become: true
 
+  vars_files:
+    - ../env/vars.yml
+
   roles:
-    - ../roles/backend-migrate
+    - roles/backend-migrate

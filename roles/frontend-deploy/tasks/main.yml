@@ -4,11 +4,11 @@
 - name: Start frontend with PM2
   become: true
   shell: |
-    source ~/.nvm/nvm.sh && cd /var/www/fe-todo && pm2 start --name fe-todo "yarn start"
+    source ~/.nvm/nvm.sh && cd "{{ frontend_dir}}" && pm2 start --name fe-todo "yarn start"
   args:
     executable: /bin/bash
 
-- name: Copy be template
+- name: Copy fe template
   become: true
   copy:
     src: templates/fe-template.j2

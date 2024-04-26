@@ -1,7 +1,2 @@
 ---
 # handlers file for backend-deploy
-
-- name: Restart nginx
-  service:
-    name: nginx
-    state: restarted
