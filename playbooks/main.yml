@@ -1,17 +1,15 @@
 ---
 - name: Main Playbook
   hosts: all
-  gather_facts: true
+  become: true
 
-  tasks:
-    - name: Include prepare playbook
-      include: prepare.yml
+  vars_files:
+    - ../env/vars.yml
 
-    - name: Include build playbook
-      include: build.yml
+- import_playbook: prepare.yml
 
-    - name: Include migrate playbook
-      include: migrate.yml
+- import_playbook: build.yml
 
-    - name: Include deploy playbook
-      include: deploy.yml
+- import_playbook: migrate.yml
+
+- import_playbook: deploy.yml

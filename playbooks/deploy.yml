@@ -4,5 +4,5 @@
   become: true
 
   roles:
-    - backend-deploy
-    - frontend-deploy
+    - ../roles/backend-deploy
+    - ../roles/frontend-deploy

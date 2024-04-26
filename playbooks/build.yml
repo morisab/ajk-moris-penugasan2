@@ -4,5 +4,5 @@
   become: true
 
   roles:
-    - backend-build
-    - frontend-build
+    - ../roles/backend-build
+    - ../roles/frontend-build

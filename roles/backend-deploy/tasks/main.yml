@@ -4,7 +4,7 @@
 - name: Copy be template
   become: true
   copy:
-    src: backend/templates/be-template.j2
+    src: templates/be-template.j2
     dest: /etc/nginx/sites-available/backend
 
 - name: Link to site-enabled
@@ -15,13 +15,13 @@
   become: true
   notify: Restart nginx
 
-- name: Curl result
-  uri:
-    url: "http://localhost:9000"
-    method: GET
-    return_content: yes
-  register: result
+# - name: Curl result
+#   uri:
+#     url: "http://localhost:9000"
+#     method: GET
+#     return_content: yes
+#   register: result
 
-- name: Display response
-  debug:
-    var: result.content
+# - name: Display response
+#   debug:
+#     var: result.content

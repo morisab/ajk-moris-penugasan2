@@ -1,2 +1,7 @@
 ---
 # handlers file for frontend-deploy
+
+- name: Restart nginx
+  service:
+    name: nginx
+    state: restarted

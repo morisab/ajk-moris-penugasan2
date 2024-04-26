@@ -4,4 +4,4 @@
   become: true
 
   roles:
-    - backend-migrate
+    - ../roles/backend-migrate
